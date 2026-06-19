@@ -1,8 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useCart } from "../context/CartContext";
+import { Icon } from "../icons/Icon";
 
 export default function Header({ onAddClick }) {
   const { user, profile, signOut } = useAuth();
+  const { totalItems } = useCart();
   const navigate = useNavigate();
 
   async function handleLogout() {
@@ -21,16 +24,21 @@ export default function Header({ onAddClick }) {
         <button className="v-nav-link">Tendências</button>
         <button className="v-nav-link">Sobre</button>
 
+        {/* admin */}
+        {user && profile?.is_admin && (
+          <button className="v-nav-link v-nav-cta" onClick={onAddClick}>
+            + Novo Produto
+          </button>
+        )}
+
+        {/* Carrinho */}
+        <Link to="/cart" className="header-cart-btn" title="Carrinho">
+          <Icon.Cart />
+          {totalItems > 0 && <span className="header-cart-badge">{totalItems}</span>}
+        </Link>
+
         {user ? (
           <>
-            {/* Botão de adicionar produto — só admin vê */}
-            {profile?.is_admin && (
-              <button className="v-nav-link v-nav-cta" onClick={onAddClick}>
-                + Novo Produto
-              </button>
-            )}
-
-            {/* Avatar com link pro perfil */}
             <Link to="/profile" className="header-avatar-btn" title="Meu perfil">
               {profile?.avatar_url ? (
                 <img src={profile.avatar_url} alt="avatar" className="header-avatar-img" />
@@ -40,7 +48,6 @@ export default function Header({ onAddClick }) {
                 </div>
               )}
             </Link>
-
             <button className="v-nav-link" onClick={handleLogout}>Sair</button>
           </>
         ) : (

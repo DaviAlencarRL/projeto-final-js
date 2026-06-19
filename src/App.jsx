@@ -16,9 +16,12 @@ import ProtectedRoute  from "./components/ProtectedRoute";
 import Login           from "./components/Login";
 import Register        from "./components/Register";
 import Profile         from "./components/Profile";
+import Cart            from "./components/Cart";
+import Checkout        from "./components/Checkout";
 
 let _nextId = INITIAL_PRODUCTS.length + 1;
 
+// Pagina inicial
 function StorePage() {
   const { isAdmin } = useAuth();
 
@@ -160,12 +163,22 @@ function StorePage() {
   );
 }
 
+// Rotas
 export default function App() {
   return (
     <Routes>
       <Route path="/"         element={<StorePage />} />
       <Route path="/login"    element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/cart"     element={<Cart />} />
+      <Route
+        path="/checkout"
+        element={
+          <ProtectedRoute>
+            <Checkout />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/profile"
         element={
